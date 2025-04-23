@@ -73,6 +73,7 @@ mongoose
 
     //User.insertMany(users);
     //Post.insertMany(posts);
+    //console.log("data added");
   })
 
   .catch((error) => console.log(`${error} did not connect`));
