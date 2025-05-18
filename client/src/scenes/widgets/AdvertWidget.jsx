@@ -19,7 +19,7 @@ const AdvertWidget = () => {
         width="100%"
         height="auto"
         alt="advert"
-        src="https://goglobalback.onrender.com/assets/advert.jpg"
+        src="http://localhost:3001/assets/advert.jpg"
         style={{ borderRadius: "0.75rem", margin: "0.75rem 0" }}
       />
       <FlexBetween>

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   Box,
   IconButton,
@@ -18,8 +18,9 @@ import {
   Notifications,
   Help,
   Menu,
-  Close,
+  Close
 } from "@mui/icons-material";
+import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
@@ -30,7 +31,11 @@ const Navbar = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const user = useSelector((state) => state.user);
+  const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
+  const [searchQuery, setSearchQuery] = useState(""); // to hold the search query
+  const [searchResults, setSearchResults] = useState([]); // to hold the search results
+  const [allUsers, setAllUsers] = useState([]);
 
   const theme = useTheme();
   const neutralLight = theme.palette.neutral.light;
@@ -40,6 +45,34 @@ const Navbar = () => {
   const alt = theme.palette.background.alt;
 
   const fullName = `${user.firstName} ${user.lastName}`;
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const res = await fetch("http://localhost:3001/users", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        const users = await res.json();
+        setAllUsers(users);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+    fetchUsers();
+  }, [token]);
+
+
+  useEffect(() => {
+    const q = searchQuery.trim().toLowerCase();
+    if (!q) {
+      setSearchResults([]);
+      return;
+    }
+    const filtered = allUsers.filter(u =>
+      (`${u.firstName} ${u.lastName}`).toLowerCase().includes(q)
+    );
+    setSearchResults(filtered);
+  }, [searchQuery, allUsers]);
 
   return (
     <FlexBetween padding="1rem 6%" backgroundColor={alt}>
@@ -64,16 +97,53 @@ const Navbar = () => {
             borderRadius="9px"
             gap="3rem"
             padding="0.1rem 1.5rem"
+            position="relative" // To position the search results
           >
-            <InputBase placeholder="Search..." />
-            <IconButton>
+            <InputBase
+              placeholder="Search..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              sx={{
+                width: "200px",
+              }}
+            />
+            <IconButton >
               <Search />
             </IconButton>
+
+            {searchResults.length > 0 && (
+              <Box
+                sx={{
+                  position: "absolute",
+                  backgroundColor: neutralLight,
+                  width: "100%",
+                  borderRadius: "8px",
+                  maxHeight: "200px",
+                  overflowY: "auto",
+                  zIndex: 10,
+                  top:"105%",
+                  left:0
+                }}
+              >
+                {searchResults.map((user) => (
+                  <Box key={user._id} padding="0.5rem" sx={{cursor: "pointer"}}>
+                    <Typography 
+                      onClick={() => {
+                      navigate(`/profile/${user._id}`);
+                      navigate(0);
+                      }}
+                    >
+                      {user.firstName} {user.lastName} 🙎‍♂️
+                    </Typography>
+                    
+                  </Box>
+                ))}
+              </Box>
+            )}
           </FlexBetween>
         )}
       </FlexBetween>
 
-      
       {isNonMobileScreens ? (
         <FlexBetween gap="2rem">
           <IconButton onClick={() => dispatch(setMode())}>
@@ -83,9 +153,16 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
-          <Message sx={{ fontSize: "25px" }} />
-          <Notifications sx={{ fontSize: "25px" }} />
-          <Help sx={{ fontSize: "25px" }} />
+          <Tooltip title="Feature not available" arrow>
+            <Message sx={{ fontSize: "25px" }} />
+          </Tooltip>
+          <Tooltip title="No notification now" arrow>
+            <Notifications sx={{ fontSize: "25px" }} />
+          </Tooltip>
+
+          <Tooltip title="Explore docs or contact support for assistance" arrow>
+            <Help sx={{ fontSize: "25px" }} />
+          </Tooltip>
           <FormControl variant="standard" value={fullName}>
             <Select
               value={fullName}
@@ -119,7 +196,6 @@ const Navbar = () => {
         </IconButton>
       )}
 
-      
       {!isNonMobileScreens && isMobileMenuToggled && (
         <Box
           position="fixed"
@@ -131,7 +207,6 @@ const Navbar = () => {
           minWidth="300px"
           backgroundColor={background}
         >
-        
           <Box display="flex" justifyContent="flex-end" p="1rem">
             <IconButton
               onClick={() => setIsMobileMenuToggled(!isMobileMenuToggled)}
@@ -140,7 +215,6 @@ const Navbar = () => {
             </IconButton>
           </Box>
 
-         
           <FlexBetween
             display="flex"
             flexDirection="column"

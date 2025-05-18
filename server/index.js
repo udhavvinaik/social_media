@@ -26,10 +26,12 @@ dotenv.config();
 const app = express();
 
 const corsOptions = {
-  origin: "https://goglobal2476.netlify.app",
+  origin: ["https://goglobal2476.netlify.app","http://localhost:3000"],
   credentials: true,
 };
 app.use(cors(corsOptions));
+
+
 
 app.use(express.json());
 app.use(helmet());

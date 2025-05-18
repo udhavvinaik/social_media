@@ -94,11 +94,47 @@ export const likePost = async (req, res) => {
 export const addComment = async (req, res) => {
   try {
     const { id } = req.params; // post id
-    const { comment } = req.body;
+    const { userId, text } = req.body;
+    const user = await User.findById(userId);
+
+    const comment = {
+      userId,
+      name: `${user.firstName} ${user.lastName}`,
+      text,
+      timestamp: new Date(),
+    };
 
     const updatedPost = await Post.findByIdAndUpdate(
       id,
       { $push: { comments: comment } },
+      { new: true }
+    );
+
+    res.status(200).json(updatedPost);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+/* DELETE */
+export const deletePost = async (req, res) => {
+  try {
+    const { id } = req.params;
+    await Post.findByIdAndDelete(id);
+    res.status(200).json({ message: "Post deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+
+export const deleteComment = async (req, res) => {
+  try {
+    const { postId, commentId } = req.params;
+
+    const updatedPost = await Post.findByIdAndUpdate(
+      postId,
+      { $pull: { comments: { _id: commentId } } },
       { new: true }
     );
 
