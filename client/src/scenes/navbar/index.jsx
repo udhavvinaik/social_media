@@ -20,6 +20,7 @@ import {
   Menu,
   Close
 } from "@mui/icons-material";
+import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import { Tooltip } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
@@ -33,8 +34,8 @@ const Navbar = () => {
   const user = useSelector((state) => state.user);
   const token = useSelector((state) => state.token);
   const isNonMobileScreens = useMediaQuery("(min-width: 1000px)");
-  const [searchQuery, setSearchQuery] = useState(""); // to hold the search query
-  const [searchResults, setSearchResults] = useState([]); // to hold the search results
+  const [searchQuery, setSearchQuery] = useState(""); 
+  const [searchResults, setSearchResults] = useState([]); 
   const [allUsers, setAllUsers] = useState([]);
 
   const theme = useTheme();
@@ -97,7 +98,7 @@ const Navbar = () => {
             borderRadius="9px"
             gap="3rem"
             padding="0.1rem 1.5rem"
-            position="relative" // To position the search results
+            position="relative" 
           >
             <InputBase
               placeholder="Search..."
@@ -153,6 +154,9 @@ const Navbar = () => {
               <LightMode sx={{ color: dark, fontSize: "25px" }} />
             )}
           </IconButton>
+          <Tooltip title="Generate images" arrow>
+            <AutoFixHighIcon onClick={() => navigate('/image-gen')} sx={{ fontSize: "25px",color: "red"}} />
+          </Tooltip>
           <Tooltip title="Feature not available" arrow>
             <Message sx={{ fontSize: "25px" }} />
           </Tooltip>
