@@ -1,0 +1,10 @@
+{
+  "build": {
+    "builder": "nodejs",
+    "commands": {
+      "install": "npm install --legacy-peer-deps",
+      "build": "echo skipping build",
+      "start": "npm start"
+    }
+  }
+}
