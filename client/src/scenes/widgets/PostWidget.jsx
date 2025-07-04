@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPost } from "state";
 import { DeleteOutline } from "@mui/icons-material";
-
+const apiBase = process.env.REACT_APP_API_BASE_URL;
 const PostWidget = ({
   postId,
   postUserId,
@@ -37,7 +37,7 @@ const PostWidget = ({
   const primary = palette.primary.main;
 
   const patchLike = async () => {
-    const response = await fetch(`http://localhost:3001/posts/${postId}/like`, {
+    const response = await fetch(`${apiBase}/posts/${postId}/like`, {
       method: "PATCH",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -54,7 +54,7 @@ const PostWidget = ({
     if (!newComment.trim()) return;
 
     const response = await fetch(
-      `http://localhost:3001/posts/${postId}/comment`,
+      `${apiBase}/posts/${postId}/comment`,
       {
         method: "POST",
         headers: {
@@ -80,7 +80,7 @@ const PostWidget = ({
     if (!confirmDelete) return;
 
     try {
-      const response = await fetch(`http://localhost:3001/posts/${postId}`, {
+      const response = await fetch(`${apiBase}/posts/${postId}`, {
         method: "DELETE",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -116,7 +116,7 @@ const PostWidget = ({
           height="auto"
           alt="post"
           style={{ borderRadius: "0.75rem", marginTop: "0.75rem" }}
-          src={`http://localhost:3001/assets/${picturePath}`}
+          src={`${apiBase}/assets/${picturePath}`}
         />
       )}
 
@@ -124,7 +124,7 @@ const PostWidget = ({
         <div style={{ width: "100%", marginTop: "0.75rem" }}>
           <video width="100%" controls style={{ borderRadius: "0.75rem" }}>
             <source
-              src={`http://localhost:3001/assets/${videoPath}`}
+              src={`${apiBase}/assets/${videoPath}`}
               type={`video/${videoPath.split(".").pop()}`}
             />
             Your browser does not support the video tag.
@@ -183,7 +183,7 @@ const PostWidget = ({
                   <button
                     onClick={async () => {
                       const response = await fetch(
-                        `http://localhost:3001/posts/${postId}/comment/${comment._id}`,
+                        `${apiBase}/posts/${postId}/comment/${comment._id}`,
                         {
                           method: "DELETE",
                           headers: {

@@ -11,7 +11,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+const apiBase = process.env.REACT_APP_API_BASE_URL;
 const UserWidget = ({ userId, picturePath }) => {
   const [user, setUser] = useState(null);
   const [isEditing, setIsEditing] = useState(false);
@@ -28,7 +28,7 @@ const UserWidget = ({ userId, picturePath }) => {
   // Fetch user data
   useEffect(() => {
     const fetchUser = async () => {
-      const response = await fetch(`http://localhost:3001/users/${userId}`, {
+      const response = await fetch(`${apiBase}/users/${userId}`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -48,7 +48,7 @@ const UserWidget = ({ userId, picturePath }) => {
 
 
   const handleSave = async () => {
-    const response = await fetch(`http://localhost:3001/users/${userId}`, {
+    const response = await fetch(`${apiBase}/users/${userId}`, {
       method: "PUT",
       headers: {
         Authorization: `Bearer ${token}`,

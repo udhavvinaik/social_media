@@ -26,7 +26,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { setMode, setLogout } from "state";
 import { useNavigate } from "react-router-dom";
 import FlexBetween from "components/FlexBetween";
-
+const apiBase = process.env.REACT_APP_API_BASE_URL;
 const Navbar = () => {
   const [isMobileMenuToggled, setIsMobileMenuToggled] = useState(false);
   const dispatch = useDispatch();
@@ -50,7 +50,7 @@ const Navbar = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       try {
-        const res = await fetch("http://localhost:3001/users", {
+        const res = await fetch(`${apiBase}/users`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const users = await res.json();

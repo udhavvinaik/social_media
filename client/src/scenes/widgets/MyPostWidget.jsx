@@ -24,7 +24,7 @@ import WidgetWrapper from "components/WidgetWrapper";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { setPosts } from "state";
-
+const apiBase = process.env.REACT_APP_API_BASE_URL;
 const MyPostWidget = ({ picturePath }) => {
 
   //video
@@ -66,7 +66,7 @@ const MyPostWidget = ({ picturePath }) => {
 
     
 
-    const response = await fetch(`http://localhost:3001/posts`, {
+    const response = await fetch(`${apiBase}/posts`, {
       method: "POST",
       headers: { Authorization: `Bearer ${token}` },
       body: formData,
